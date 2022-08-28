@@ -1,31 +1,43 @@
-import React from "react"
-import { useFormik } from "formik"
-import * as Yup from "yup"
-import {Link} from 'react-router-dom'
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link } from "react-router-dom";
 import google from "../../assets/images/google.png";
 import facebook from "../../assets/images/facebook.png";
 import github from "../../assets/images/github.png";
 import twitter from "../../assets/images/twitter.png";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
+  let navigate = useNavigate();
   const formik = useFormik({
     //inital values
     initialValues: {
-      username: "",
+      email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string()
-        .required("Must enter username")
-        .matches("[A-Za-z]", "Must only contain letters")
-        .max(15, "too long, use an abreviation please"),
+      email: Yup.string()
+        .required("Must enter an email")
+        .email("Invalid email format"),
       password: Yup.string()
         .required("Must enter a password")
         .min(8, "At least 8 characters"),
     }),
     //submit function that takes form values as args
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      signInWithEmailAndPassword(auth, values.email, values.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error.code, " ", error.message);
+        });
     },
   });
   return (
@@ -40,33 +52,32 @@ export default function Signin() {
               <form
                 onSubmit={formik.handleSubmit}
                 className="space-y-4 md:space-y-6"
-                action="#"
               >
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Username
+                    Email
                   </label>
                   <input
-                    type="text"
-                    name="username"
-                    id="username"
+                    type="email"
+                    name="email"
+                    id="email"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="johndoe"
+                    placeholder="johndoe@mail.com"
                     required=""
-                    value={formik.values.username}
+                    value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.errors?.username && formik.touched?.username && (
+                  {formik.errors?.email && formik.touched?.email && (
                     <span className="text-red-500 text-[12px] font-bold">
-                      {formik.errors?.username}
+                      {formik.errors?.email}
                     </span>
                   )}
                 </div>
-             
+
                 <div>
                   <label
                     htmlFor="password"
@@ -91,7 +102,7 @@ export default function Signin() {
                     </span>
                   )}
                 </div>
-              
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-start">
                     <div className="flex items-center h-5">
@@ -129,24 +140,27 @@ export default function Signin() {
               {/* Sign up with socials */}
               <div className="flex justify-between">
                 <button className="w-14 h-14 bg-slate-100	 rounded-lg">
-                  <img src={google} className='p-2' />
+                  <img src={google} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={facebook} className='p-2' />
+                  <img src={facebook} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={github} className='p-2'/>
+                  <img src={github} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={twitter} className='p-2'/>
+                  <img src={twitter} className="p-2" />
                 </button>
               </div>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Don't have an account ?{" "}
-                  <Link to={'/signup'} className="font-medium text-primary-600 hover:underline dark:text-primary-500">
-                    Sign Up
-                  </Link>
-                </p>
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                Don't have an account ?{" "}
+                <Link
+                  to={"/signup"}
+                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Sign Up
+                </Link>
+              </p>
             </div>
           </div>
         </div>

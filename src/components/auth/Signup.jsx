@@ -6,8 +6,12 @@ import google from "../../assets/images/google.png";
 import facebook from "../../assets/images/facebook.png";
 import github from "../../assets/images/github.png";
 import twitter from "../../assets/images/twitter.png";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
+  let navigate = useNavigate();
   const formik = useFormik({
     //inital values
     initialValues: {
@@ -27,14 +31,24 @@ export default function Signup() {
       password: Yup.string()
         .required("Must enter a password")
         .min(8, "At least 8 characters"),
-      confirmpassword: Yup.string().oneOf(
-        [Yup.ref("password"), null],
-        "Passwords must match"
-      ),
+      confirmpassword: Yup.string()
+        .required("Cannot be empty")
+        .oneOf([Yup.ref("password"), null], "Passwords must match"),
     }),
     //submit function that takes form values as args
     onSubmit: (values) => {
-      alert(JSON.stringify(values));
+      createUserWithEmailAndPassword(auth, values.email, values.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log("Account Successfully Created : ", user);
+          navigate("/signin");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, " ", errorMessage);
+        });
     },
   });
   return (
@@ -49,7 +63,6 @@ export default function Signup() {
               <form
                 onSubmit={formik.handleSubmit}
                 className="space-y-4 md:space-y-6"
-                action="#"
               >
                 <div>
                   <label
@@ -159,16 +172,16 @@ export default function Signup() {
               {/* Sign up with socials */}
               <div className="flex justify-between">
                 <button className="w-14 h-14 bg-slate-100	 rounded-lg">
-                  <img src={google} className='p-2' />
+                  <img src={google} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={facebook} className='p-2' />
+                  <img src={facebook} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={github} className='p-2'/>
+                  <img src={github} className="p-2" />
                 </button>
                 <button className="w-14 h-14 bg-slate-100 rounded-lg">
-                  <img src={twitter} className='p-2'/>
+                  <img src={twitter} className="p-2" />
                 </button>
               </div>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
