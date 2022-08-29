@@ -7,12 +7,15 @@ import { authContext } from "./components/Context/AuthContext";
 
 export default function App() {
   const [currentUser] = useContext(authContext); //current user to set route guards
+  const RequiredAuthRedirect=({To,redirectTo})=>{
+    return currentUser ? To : redirectTo
+  }
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/" element={<RequiredAuthRedirect To={<Home/>} redirectTo={<Signin/>} />} />
+        <Route path="/signup" element={<RequiredAuthRedirect To={<Home/>} redirectTo={<Signup/>}  />}/>
+        <Route path="/signin" element={<RequiredAuthRedirect To={<Home/>} redirectTo={<Signin/>}  />} />
       </Routes>
     </>
   );
