@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -9,8 +9,12 @@ import twitter from "../../assets/images/twitter.png";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { authContext } from "../Context/AuthContext";
 
 export default function Signup() {
+
+  const [,setCurrentUser]=useContext(authContext) 
+
   let navigate = useNavigate();
   const formik = useFormik({
     //inital values
@@ -41,8 +45,9 @@ export default function Signup() {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          setCurrentUser(user) //setting the user context
           console.log("Account Successfully Created : ", user);
-          navigate("/signin");
+          navigate("/");
         })
         .catch((error) => {
           const errorCode = error.code;
