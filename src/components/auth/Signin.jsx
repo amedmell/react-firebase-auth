@@ -1,4 +1,4 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { authContext } from "../Context/AuthContext";
 
 export default function Signin() {
-  const [,setCurrentUser]=useContext(authContext) 
+  const [, setCurrentUser] = useContext(authContext);
 
   let navigate = useNavigate();
   const formik = useFormik({
@@ -35,7 +35,7 @@ export default function Signin() {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          setCurrentUser(user)
+          setCurrentUser(user);
           console.log(user);
           navigate("/");
         })

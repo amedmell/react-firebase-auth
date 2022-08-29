@@ -12,8 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { authContext } from "../Context/AuthContext";
 
 export default function Signup() {
-
-  const [,setCurrentUser]=useContext(authContext) 
+  const [, setCurrentUser] = useContext(authContext);
 
   let navigate = useNavigate();
   const formik = useFormik({
@@ -45,7 +44,7 @@ export default function Signup() {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          setCurrentUser(user) //setting the user context
+          setCurrentUser(user); //setting the user context
           console.log("Account Successfully Created : ", user);
           navigate("/");
         })
