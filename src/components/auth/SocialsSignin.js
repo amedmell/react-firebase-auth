@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   GithubAuthProvider,
+  TwitterAuthProvider,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 
@@ -56,5 +57,26 @@ export function signInWithGithub() {
       currentUser = result.user;
     })
     .catch((error) => console.log(error));
+  return currentUser;
+}
+
+export function signInWithTwitter() {
+  let currentUser = null;
+  const provider = new TwitterAuthProvider();
+
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+      // You can use these server side with your app's credentials to access the Twitter API.
+      const credential = TwitterAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const secret = credential.secret;
+
+      // The signed-in user info.
+      const user = result.user;
+      currentUser = user;
+    })
+    .catch((error) => console.log(error));
+
   return currentUser;
 }

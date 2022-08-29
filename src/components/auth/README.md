@@ -1,0 +1,1 @@
+### TO have functional social login (github,facebook,twitter),add an App ID & a Secret Client ID to your firebase console in order to make them work
