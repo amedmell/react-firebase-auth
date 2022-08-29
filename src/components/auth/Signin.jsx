@@ -31,6 +31,7 @@ export default function Signin() {
     }),
     //submit function that takes form values as args
     onSubmit: (values) => {
+      //JUST REPLACE THIS WITH ANY SIGNIN FUNCTION FROM ANY API
       signInWithEmailAndPassword(auth, values.email, values.password)
         .then((userCredential) => {
           // Signed in

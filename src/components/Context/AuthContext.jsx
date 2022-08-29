@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { createContext, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged,signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 
 //METHOD 1 - storing the user in localstorage
@@ -21,6 +21,7 @@ export default function AuthContext(props) {
   // }, [currentUser]);
 
   useEffect(() => {
+    //JUST CHANGE THIS TO ANY FUNCTION THAT GETS A USER FORM ANY API
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false); //only render children if not loading, this avoids a weird bug

@@ -41,6 +41,7 @@ export default function Signup() {
     }),
     //submit function that takes form values as args
     onSubmit: (values) => {
+      //JUST REPLACE THIS WITH ANY SIGNUP FUNCTION FROM ANY API
       createUserWithEmailAndPassword(auth, values.email, values.password)
         .then((userCredential) => {
           // Signed in
@@ -165,7 +166,7 @@ export default function Signup() {
         </form>
         {/* Sign up with socials */}
         <Socials />
-        
+
         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
           Already have an account ?{" "}
           <Link
