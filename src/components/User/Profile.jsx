@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { db } from "../../firebase/firebase";
 
 export default function Profile(props) {
@@ -8,6 +9,7 @@ export default function Profile(props) {
   const LABEL_STYLING =
     "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300";
   const [profile, setProfile] = useState({});
+  const [image, setImage] = useState(null);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -21,9 +23,26 @@ export default function Profile(props) {
     console.log(profile);
   };
 
+  //upload image
+  const handleImage = () => {
+    const storage = getStorage();
+
+    const storageRef = ref(storage, "profile-image");
+
+    // 'file' comes from the Blob or File API
+    uploadBytes(storageRef, image).then((snapshot) => {
+      console.log(snapshot);
+      console.log("Uploaded a blob or file!");
+    });
+  };
+
+  //adding & updating user profile
   const handleProfile = async (e) => {
     e.preventDefault();
+    console.log(profile);
     // Add a new document with a generated id.
+    if (image !== null) handleImage(); //handle image upload
+
     await setDoc(doc(db, "users", props.uid), {
       ...profile,
       timeStamp: serverTimestamp(),
@@ -41,7 +60,12 @@ export default function Profile(props) {
             >
               Profile Photo
             </label>
-            <input className={INPUT_STYLING} id="image" type="file" />
+            <input
+              onChange={(e) => setImage(e.target.files[0])}
+              className={INPUT_STYLING}
+              id="image"
+              type="file"
+            />
           </div>
           <div>
             <label htmlFor="first_name" className={LABEL_STYLING}>

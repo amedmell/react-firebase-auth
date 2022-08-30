@@ -17,8 +17,8 @@ export default function Home() {
       })
       .catch((error) => {
         console.log("Error Signing out : ", error);
-      });
-  };
+      });                                                 
+  };                                                    
 
   return (
     <>
